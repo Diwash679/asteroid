@@ -26,7 +26,6 @@ class CircleShape(pygame.sprite.Sprite):
         # Update collision rect
         self.rect.center = (int(self.position.x), int(self.position.y))
         
-    def collides_with(self, other):
-        # Circle collision detection
-        distance = (self.position - other.position).length()
-        return distance < (self.radius + other.radius)
+    def collide(self, other):
+        distance = self.position.distance_to(other.position)
+        return distance <= self.radius + other.radius
