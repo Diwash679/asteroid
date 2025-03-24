@@ -1,6 +1,8 @@
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 import os
 
 pygame.init()
@@ -15,8 +17,12 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 updateable = pygame.sprite.Group()
 drawable = pygame.sprite.Group()
+ast = pygame.sprite.Group()
 
 Player.containers = (updateable, drawable)
+Asteroid.containers = (ast, updateable, drawable)
+AsteroidField.containers = (updateable,)
+
 
 def main():
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
@@ -31,11 +37,12 @@ def main():
                 running = False
         
         # Update game state
-        player.update(dt)
+        updateable.update(dt)
         
         # Update screen
         screen.fill(color="black")
-        player.draw(screen)
+        for entity in drawable:
+            entity.draw(screen)
         pygame.display.flip()
         
         # Control frame rate and get dt
