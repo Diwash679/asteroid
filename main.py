@@ -4,6 +4,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from random import uniform
 import os
 
 pygame.init()
@@ -19,11 +20,12 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 updateable = pygame.sprite.Group()
 drawable = pygame.sprite.Group()
 ast = pygame.sprite.Group()
+bullets = pygame.sprite.Group()
 
 Player.containers = (updateable, drawable)
 Asteroid.containers = (ast, updateable, drawable)
 AsteroidField.containers = (updateable,)
-Shot.containers = (updateable, drawable)
+Shot.containers = (updateable, drawable, bullets)
 
 def main():
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
@@ -36,7 +38,7 @@ def main():
         # Process events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                running = Falsea
         
         # Update game state
         updateable.update(dt)
@@ -47,9 +49,16 @@ def main():
                 import sys
                 sys.exit() 
         
+        for asteroid in ast:
+            for bullet in bullets:  # Use bullets group instead of drawable
+                if bullet.collide(asteroid):  # This should work correctly
+                    asteroid.split()
+                    bullet.kill()
+                    break  # Break out of inner loop
+            
         # Update screen
         screen.fill(color="black")
-        for entity in drawable:
+        for entity in drawable:            
             entity.draw(screen)
         pygame.display.flip()
         
